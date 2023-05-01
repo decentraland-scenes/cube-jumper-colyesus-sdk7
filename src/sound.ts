@@ -9,10 +9,23 @@ export const finishSound1:PBAudioSource = { audioClipUrl: "sounds/wow.mp3"};
 export const finishSound2:PBAudioSource = { audioClipUrl: "sounds/deja-vu.mp3"};
 export const countdownRestartSound:PBAudioSource = { audioClipUrl: "sounds/countdown-restart.mp3"};
 
-function play(clip: PBAudioSource, volume: number, position = Transform.get(engine.PlayerEntity).position) {
+function play(clip: PBAudioSource, volume: number, position?:Vector3) {
     const entity = engine.addEntity()// new Entity();
 
-    Transform.create(entity,{position:position})
+    let pos = position
+    if(pos === undefined){
+        const pposTran = Transform.getOrNull(engine.PlayerEntity)
+        if(pposTran){
+            pos = pposTran.position
+        }else{
+            console.log("sound.ts","play","WARNING unable to get player pos so using Vecto3.zero() for ",clip)
+            pos = Vector3.Zero()
+        } 
+    }
+    Transform.create(entity,
+        {
+            position: pos
+        })
     AudioSource.create(entity,clip)
 
     return { entity };
