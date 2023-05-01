@@ -1,6 +1,8 @@
-# SDK7 Test scene
+# Cube Jumper SDK7 Test scene
 
 This scene is built with the SDK7 in alpha state.
+
+Port of [https://github.com/colyseus/decentraland](https://github.com/colyseus/decentraland)
 
 # New ECS for SDK7
 
