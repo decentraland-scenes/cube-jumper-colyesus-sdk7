@@ -1,11 +1,7 @@
 //
 // IMPORTANT : 
-// - include `noLib: false` to your tsconfig.json file, under "compilerOptions"
+// - trying vanilla without refernce imports and see if it works
 //
-///<reference lib="es2015.symbol" />
-///<reference lib="es2015.symbol.wellknown" />
-///<reference lib="es2015.collection" />
-///<reference lib="es2015.iterable" />
 
 import { Color4 } from "@dcl/sdk/math";
 import { Client, Room } from "colyseus.js";
