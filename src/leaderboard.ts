@@ -1,4 +1,4 @@
-export const uiCanvas = new UICanvas()
+/*export const uiCanvas = new UICanvas()
 
 const leaderboardBackground = new UIContainerRect(uiCanvas);
 leaderboardBackground.alignmentUsesSize = true;
@@ -22,12 +22,13 @@ leaderboard.hTextAlign = "left";
 leaderboard.vAlign = "center";
 leaderboard.color = Color4.White();
 
-
+*/
 
 export function updateLeaderboard(playerNames: string[]) {
     while (playerNames.length < 10) {
         playerNames.push("");
     }
     playerNames = playerNames.filter((_, i) => i < 10);
-    leaderboard.value = `Leaderboard:\n\n${playerNames.join("\n")}`;
+    //leaderboard.value = `Leaderboard:\n\n${playerNames.join("\n")}`;
+    console.log(`Leaderboard:\n\n${playerNames.join("\n")}`)
 }

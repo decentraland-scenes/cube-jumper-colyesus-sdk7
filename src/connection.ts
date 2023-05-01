@@ -7,19 +7,27 @@
 ///<reference lib="es2015.collection" />
 ///<reference lib="es2015.iterable" />
 
+import { Color4 } from "@dcl/sdk/math";
 import { Client, Room } from "colyseus.js";
-import { isPreviewMode, getCurrentRealm } from '@decentraland/EnvironmentAPI'
-import { getUserData } from "@decentraland/Identity";
+import { log } from "./back-ports/backPorts";
+import { getUserData } from "~system/UserIdentity"
+import { getRealm } from "~system/Runtime"
+//import { isPreviewMode, getCurrentRealm } from '@decentraland/EnvironmentAPI'
+//import { getUserData } from "@decentraland/Identity";
+
 
 export async function connect(roomName: string, options: any = {}) {
-    const isPreview = await isPreviewMode();
-    const realm = await getCurrentRealm();
+    
+    const realm = await getRealm({
+
+    });
+    const isPreview = realm.realmInfo?.isPreview
 
     //
     // make sure users are matched together by the same "realm".
     //
-    options.realm = realm?.displayName;
-    options.userData = await getUserData();
+    options.realm = realm?.realmInfo?.realmName;
+    options.userData = await getUserData({});
 
     log("userData:", options.userData);
 
@@ -41,28 +49,30 @@ export async function connect(roomName: string, options: any = {}) {
         return room;
 
     } catch (e) {
-        updateConnectionMessage(`Error: ${e.message}`, Color4.Red())
+        console.error(e)
+        //updateConnectionMessage(`Error: ${e.message}`, Color4.Red())
         throw e;
     }
 }
 
-let message: UIText;
+//let message: UIText;
 
 function addConnectionDebugger(endpoint: string) {
-    const canvas = new UICanvas()
+   /* const canvas = new UICanvas()
     message = new UIText(canvas)
     message.fontSize = 15
     message.width = 120
     message.height = 30
     message.hTextAlign = "center";
     message.vAlign = "bottom"
-    message.positionX = -80
+    message.positionX = -80*/
     updateConnectionMessage(`Connecting to ${endpoint}`, Color4.White());
 }
 
 function updateConnectionMessage(value: string, color: Color4) {
-    message.value = value;
-    message.color = color;
+    console.log("updateConnectionMessage",value)
+    /*message.value = value;
+    message.color = color;*/
 }
 
 function updateConnectionDebugger(room: Room) {

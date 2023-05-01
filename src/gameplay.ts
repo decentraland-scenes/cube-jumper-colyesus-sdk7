@@ -1,9 +1,13 @@
-import * as utils from '@dcl/ecs-scene-utils';
-import * as ui from '@dcl/ui-scene-utils';
+import * as utils from '@dcl-sdk/utils'
+//import * as ui from '@dcl/ui-scene-utils';
 import { connect } from "./connection";
-import { uiCanvas, updateLeaderboard } from './leaderboard';
+import { updateLeaderboard } from './leaderboard';
 import { floor } from './scene';
 import { ambienceSound, clickSound, fallSound, finishSound1, finishSound2, newLeaderSound, countdownRestartSound, playLoop, playOnce, playOnceRandom } from './sound';
+import { log } from './back-ports/backPorts';
+import { AudioSource, Entity, MeshCollider, MeshRenderer, Transform, engine } from '@dcl/sdk/ecs';
+import { Vector3 } from '@dcl/sdk/math';
+import { addRepeatTrigger } from './Utils';
 
 // play ambient music
 playLoop(ambienceSound, 0.4);
@@ -19,7 +23,7 @@ connect("my_room").then((room) => {
     log("Connected!");
 
     // create UI countdown
-    const countdown = new ui.UICounter(0, -30, 30, Color4.White(), 50, false);
+    //const countdown = new ui.UICounter(0, -30, 30, Color4.White(), 50, false);
 
     let lastBlockTouched: number = 0;
     function onTouchBlock(y: number) {
@@ -39,62 +43,71 @@ connect("my_room").then((room) => {
 
     // The "floor" object was originally named "entity" from the Decentraland Builder.
     // I exported it from the "./scene" file to be able to attach custom behaviour.
-    const floorTriggerShape = new utils.TriggerBoxShape(new Vector3(16, 2, 16), new Vector3(0, 3, 0));
-    floor.addComponent(
-        new utils.TriggerComponent(floorTriggerShape, {
-            onCameraEnter: () => {
-                if (lastBlockTouched > 2 && lastBlockTouched < 20) {
-                    room.send("fall", Camera.instance.position);
-                }
-            },
-        })
+    utils.triggers.enableDebugDraw(true)
+    
+    addRepeatTrigger(
+        Vector3.create(16, 2, 16), Vector3.create(0, 3, 0),
+        () => {
+            log('player.enter.floorTriggerShape')
+            if (lastBlockTouched > 2 && lastBlockTouched < 20) {
+                room.send("fall", Transform.get(engine.PlayerEntity).position);
+            }
+        },
+        floor,
+        false,
+        () => {
+            log('player.exit.floorTriggerShape')
+        }
     )
-
+    
     /// --- Spawner function ---
     function spawnCube(x: number, y: number, z: number) {
         // create the entity
-        const cube = new Entity()
+        const cube = engine.addEntity()
+      
+        Transform.create(cube, {
+          position: { x, y, z },
+        })
+      
+        MeshRenderer.setBox(cube)
+        MeshCollider.setBox(cube)
 
         // add a transform to the entity
-        cube.addComponent(new Transform({ position: new Vector3(x, y, z) }))
-
-        // add a shape to the entity
-        const box = new BoxShape();
-        box.withCollisions = true;
-        cube.addComponent(box);
-
+        Transform.create(cube,{ position: Vector3.create(x, y, z) })
+        /*
         // set random color/material for the cube
         const cubeMaterial = new Material()
         cubeMaterial.albedoColor = Color3.Random();
         cubeMaterial.metallic = Math.random();
         cubeMaterial.roughness = Math.random();
         cube.addComponent(cubeMaterial);
-
-        // trigger configurations (Took from https://github.com/decentraland-scenes/switchboard-platforms/)
-        const triggerShape = new utils.TriggerBoxShape(
-            new Vector3(0.7, 1, 0.7), // size
-            new Vector3(0, 2, 0) // position
-        );
-
-        // Button triggers
-        cube.addComponent(
-            new utils.TriggerComponent(triggerShape, {
-                onCameraEnter: () => {
-                    onTouchBlock(y);
-                },
-            })
+        */
+       
+        addRepeatTrigger(
+            Vector3.create(0, 2, 0), // position,
+            Vector3.create(0.7, 1, 0.7), // size
+            () => {
+                log('player.enter.touch.cube')
+                onTouchBlock(y);
+            },
+            floor,
+            false,
+            () => {
+                log('player.exit.touch.cube')
+            }
         )
 
-        // scale block from 0 to 1
-        cube.addComponent(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.2));
-
+        utils.tweens.startScaling(cube,
+            Vector3.create(0, 0, 0), Vector3.create(1, 1, 1),.2
+            )
+        
         // play click sound
-        const clickAudioSource = new AudioSource(clickSound);
-        cube.addComponent(clickAudioSource);
-        clickAudioSource.playOnce();
-
-        // add the entity to the engine
-        engine.addEntity(cube)
+        AudioSource.createOrReplace(cube,
+            {
+                audioClipUrl:"sounds/click.mp3",
+                loop:false,
+                playing:true
+            })
 
         return cube;
     }
@@ -133,7 +146,8 @@ connect("my_room").then((room) => {
     }
 
     room.state.listen("countdown", (num: number) => {
-        countdown.set(num);
+        log("countdown",num)
+        //countdown.set(num);
     })
 
     room.onMessage("start", () => {
@@ -145,17 +159,18 @@ connect("my_room").then((room) => {
         highestRanking = 0;
         highestPlayer = undefined;
 
-        countdown.show();
+        //countdown.show();
     });
 
     room.onMessage("fall", (atPosition) => {
-        playOnce(fallSound, 1, new Vector3(atPosition.x, atPosition.y, atPosition.z));
+        playOnce(fallSound, 1, Vector3.create(atPosition.x, atPosition.y, atPosition.z));
     })
 
     room.onMessage("finished", () => {
-        ui.displayAnnouncement(`${highestPlayer.name} wins!`, 8, Color4.White(), 60);
+        //ui.displayAnnouncement(`${highestPlayer.name} wins!`, 8, Color4.White(), 60);
+        log("finished",`${highestPlayer.name} wins!`)
         playOnceRandom([finishSound1, finishSound2]);
-        countdown.hide();
+       // countdown.hide();
     });
 
     room.onMessage("restart", () => {
@@ -167,7 +182,8 @@ connect("my_room").then((room) => {
     });
 
 }).catch((err) => {
-    error(err);
+    //error(err);
+    console.error(err)
 
 });
 

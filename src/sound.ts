@@ -1,34 +1,37 @@
+import { AudioSource, PBAudioSource, Transform, engine } from "@dcl/sdk/ecs";
+import { Vector3 } from "@dcl/sdk/math";
 
-export const ambienceSound = new AudioClip("sounds/ambience.mp3");
-export const clickSound = new AudioClip("sounds/click.mp3");
-export const newLeaderSound = new AudioClip("sounds/new-leader.mp3");
-export const fallSound = new AudioClip("sounds/roblox-death-sound.mp3");
-export const finishSound1 = new AudioClip("sounds/wow.mp3");
-export const finishSound2 = new AudioClip("sounds/deja-vu.mp3");
-export const countdownRestartSound = new AudioClip("sounds/countdown-restart.mp3");
+export const ambienceSound:PBAudioSource = { audioClipUrl: "sounds/ambience.mp3"};
+export const clickSound:PBAudioSource = { audioClipUrl: "sounds/click.mp3"};
+export const newLeaderSound:PBAudioSource = { audioClipUrl: "sounds/new-leader.mp3"};
+export const fallSound:PBAudioSource = { audioClipUrl: "sounds/roblox-death-sound.mp3"};
+export const finishSound1:PBAudioSource = { audioClipUrl: "sounds/wow.mp3"};
+export const finishSound2:PBAudioSource = { audioClipUrl: "sounds/deja-vu.mp3"};
+export const countdownRestartSound:PBAudioSource = { audioClipUrl: "sounds/countdown-restart.mp3"};
 
-function play(clip: AudioClip, volume: number, position = Camera.instance.position) {
-    const entity = new Entity();
-    const audio = new AudioSource(clip);
-    audio.volume = volume;
+function play(clip: PBAudioSource, volume: number, position = Transform.get(engine.PlayerEntity).position) {
+    const entity = engine.addEntity()// new Entity();
 
-    entity.addComponent(audio);
-    entity.addComponent(new Transform({ position }));
-    engine.addEntity(entity);
+    Transform.create(entity,{position:position})
+    AudioSource.create(entity,clip)
 
-    return { audio, entity };
+    return { entity };
 }
 
-export function playLoop(clip: AudioClip, volume: number = 1) {
-    const { audio, entity } = play(clip, volume);
-    audio.playing = true;
-    audio.loop = true;
+export function playLoop(clip: PBAudioSource, volume: number = 1) {
+    const newArgs = {...clip}
+    newArgs.loop = true
+    newArgs.playing = true 
+    const { entity } = play(clip, volume);
 }
 
-export function playOnce(clip: AudioClip, volume: number = 1, position?: Vector3) {
-    const { audio, entity } = play(clip, volume, position);
+export function playOnce(clip: PBAudioSource, volume: number = 1, position?: Vector3) {
+    const newArgs = {...clip}
+    newArgs.loop = false
+    newArgs.playing = true
+    const { entity } = play(newArgs, volume, position);
 
-    // FIXME: this is probably not the best practice to remove an entity once the sound has finished...
+    /*// FIXME: this is probably not the best practice to remove an entity once the sound has finished...
     class SoundRemoverWhenFinished implements ISystem {
         totalTime: number = 0;
         update(dt: number) {
@@ -45,10 +48,10 @@ export function playOnce(clip: AudioClip, volume: number = 1, position?: Vector3
     audio.loop = false;
     audio.playOnce();
 
-    engine.addSystem(removeSoundWhenFinished);
+    engine.addSystem(removeSoundWhenFinished);*/
 }
 
-export function playOnceRandom(clips: AudioClip[], volume: number = 1) {
+export function playOnceRandom(clips: PBAudioSource[], volume: number = 1) {
     // select a random sound to play
     playOnce(clips[Math.floor(Math.random() * clips.length)]);
 }
