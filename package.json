@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.0",
-    "colyseus.js": "^0.15.0-preview.7"
+    "colyseus.js": "0.14.15-alpha.0"
   }
 }
