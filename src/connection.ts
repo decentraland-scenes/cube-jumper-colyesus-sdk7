@@ -4,7 +4,7 @@
 //
 
 import { Color4 } from "@dcl/sdk/math";
-import { Client, Room } from "colyseus.js";
+import { Client, Room } from "colyseus.js/dist/colyseus-decentraland";
 import { log } from "./back-ports/backPorts";
 import { getUserData } from "~system/UserIdentity"
 import { getRealm } from "~system/Runtime"
