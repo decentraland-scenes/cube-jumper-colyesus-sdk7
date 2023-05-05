@@ -4,7 +4,7 @@
 //
 
 import { Color4 } from "@dcl/sdk/math";
-import { Client, Room } from "colyseus.js/dist/colyseus-decentraland";
+import { Client, Room } from "colyseus.js/decentraland";
 import { log } from "./back-ports/backPorts";
 import { getUserData } from "~system/UserIdentity"
 import { getRealm } from "~system/Runtime"
@@ -13,7 +13,7 @@ import { getRealm } from "~system/Runtime"
 
 
 export async function connect(roomName: string, options: any = {}) {
-    
+
     const realm = await getRealm({
 
     });

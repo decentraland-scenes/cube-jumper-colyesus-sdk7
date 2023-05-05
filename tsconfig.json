@@ -3,8 +3,9 @@
     "allowJs": true,
     "strict": true,
     "paths": {
-      "colyseus.js/dist/colyseus-decentraland": ["./node_modules/colyseus.js"]
-    }
+      "colyseus.js/decentraland": ["./node_modules/colyseus.js/dist/colyseus.d.ts"]
+    },
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",
