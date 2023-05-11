@@ -6,7 +6,7 @@ import {openExternalUrl} from "~system/RestrictedActions"
  * @param msg 
  */
 export function log(...msg:any[]){
-  console.log(msg)
+  console.log("MYSCENE",msg)
 }
 
 export type TranformConstructorArgs = TransformTypeWithOptionals  & {}

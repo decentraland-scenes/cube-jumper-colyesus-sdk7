@@ -9,14 +9,14 @@ export function shuffleArray<T>(array: T[]): T[] {
   }
   return array
 }
-
+ 
 /**
  * Add a trigger that will be triggered each time
  */
 export function addRepeatTrigger(
-  position: Vector3,
   size: Vector3,
-  onPlayerEnter: () => void ,
+  position: Vector3,
+  onPlayerEnter: (entity:Entity) => void ,
   parent: Entity|undefined,
   show: boolean = false,
   onExit: () => void 
@@ -32,7 +32,7 @@ export function addRepeatTrigger(
 
   utils.triggers.addTrigger(
     trigger
-    , 1, 1
+    , utils.NO_LAYERS, utils.LAYER_1
     ,[{position:Vector3.Zero(),scale:size,type:'box'}]
     ,onPlayerEnter
     ,onExit,  Color3.Yellow()
