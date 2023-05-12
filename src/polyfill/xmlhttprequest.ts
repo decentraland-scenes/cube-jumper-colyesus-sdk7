@@ -69,6 +69,7 @@ export class XMLHttpRequest{
     onload?:()=>void
     withCredentials:any//???
     requestHeaders:Record<string,any>={}
+    timeout?:number
 
     //responseHeaders:Record<string,any>={}
     responseHeadersRaw?:string
@@ -113,8 +114,8 @@ export class XMLHttpRequest{
         fetch(this.url,{
             method: this.method,
             headers: this.requestHeaders, //pretty sure Record<string,string> == { [index: string]: string }
-            body: data
-            
+            body: data,
+            timeout: this.timeout
         }).then(async (val:Response)=>{
             console.log(CLASSNAME,METHOD_NAME,"PROMISE.ENTRY",val)
 
