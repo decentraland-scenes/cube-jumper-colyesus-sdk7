@@ -133,6 +133,10 @@ export class XMLHttpRequest{
                 ,this.responseHeadersRaw)
             if(this.onload) this.onload()
         }).catch((reason:any)=>{
+            //colysesus wanted this 'err.timeout = err.type == 'timeout';'
+            //20 == abort, 23 == timeout
+            if(reason.code && (reason.code == 20 || reason.code == 23)) reason.type = 'timeout'
+
             if(this.onerror) this.onerror(reason)
         })
     }
