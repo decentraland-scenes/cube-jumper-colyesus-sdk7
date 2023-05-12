@@ -53,6 +53,13 @@ type xx = {
     [index: string]: string;
 }*/
 
+//looked good but does not work :(
+//https://www.npmjs.com/package/xmlhttprequest-ts
+//imports node types that conflict with dcl console???
+//https://decentralandteam.slack.com/archives/C0292P4HJ93/p1683749722241919
+//import { XMLHttpRequest } from 'xmlhttprequest-ts';
+//writing my own
+
 //const myx:xx = {2: 's'}
 
 const CLASSNAME = "XMLHttpRequest"
