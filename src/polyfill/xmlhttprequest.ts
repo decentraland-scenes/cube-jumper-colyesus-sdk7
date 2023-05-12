@@ -131,6 +131,8 @@ export class XMLHttpRequest{
                 ,"this.responseHeadersRaw"
                 ,this.responseHeadersRaw)
             if(this.onload) this.onload()
+        }).catch((reason:any)=>{
+            if(this.onerror) this.onerror(reason)
         })
     }
 
