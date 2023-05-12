@@ -63,17 +63,14 @@ connect("my_room").then((room) => {
     /// --- Spawner function ---
     function spawnCube(x: number, y: number, z: number) {
         // create the entity
-        const cube = engine.addEntity()
+        const cube = engine.addEntity() 
       
-        Transform.create(cube, {
-          position: { x, y, z },
-        })
-      
+        // add a transform to the entity
+        Transform.create(cube,{ position: Vector3.create(x, y, z) })
+
         MeshRenderer.setBox(cube)
         MeshCollider.setBox(cube)
 
-        // add a transform to the entity
-        Transform.create(cube,{ position: Vector3.create(x, y, z) })
         /*
         // set random color/material for the cube
         const cubeMaterial = new Material()

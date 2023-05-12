@@ -18,8 +18,7 @@ Transform.create(viewSourceBlock,
     scale: Vector3.create(1, 1, 1),
     parent: _scene
   })
-GltfContainer.create(viewSourceBlock
-    ,{src:"models/multicolor_pattern.glb",createPointerColliders:true})
+GltfContainer.create(viewSourceBlock ,{ src:"models/multicolor_pattern.glb" })
 
 /*
 viewSourceBlock.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 45, 0)));

@@ -23,8 +23,8 @@
     "trailingComma": "none"
   },
   "dependencies": {
-    "@dcl-sdk/utils": "^1.1.0",
-    "colyseus.js": "^0.15.2",
-    "core-js": "^3.30.1"
+    "@dcl-sdk/utils": "^1.1.1",
+    "colyseus.js": "^0.15.8",
+    "core-js": "^3.30.2"
   }
 }
