@@ -14,7 +14,7 @@ import { getRealm } from "~system/Runtime"
 
 
 export async function connect(roomName: string, options: any = {}) {
-    
+
     const realm = await getRealm({
 
     });

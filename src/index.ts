@@ -1,3 +1,4 @@
+import 'core-js/features/url'
 
 // Import Decentraland Builder code.
 import "./scene";
