@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "strict": true,
-    "paths": {
-      "colyseus.js/decentraland": ["./node_modules/colyseus.js/dist/colyseus.d.ts"]
-    },
-    "skipLibCheck": true
+    "strict": true
   },
   "include": [
     "src/**/*.ts",

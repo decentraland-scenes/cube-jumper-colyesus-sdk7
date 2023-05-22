@@ -33,12 +33,17 @@ connect("my_room").then((room) => {
     }
 
     function refreshLeaderboard() {
-        // get all players names sorted by their ranking 
-        const allPlayers = Array.from(room.state.players.values()).sort((a: any, b: any) => {
-            return b.ranking - a.ranking;
-        }).map((player: any, i: number) => `${i + 1}. ${player.name} - ${player.ranking}`);
+        try{
+            // get all players names sorted by their ranking 
+            const allPlayers = Array.from(room.state.players.values()).sort((a: any, b: any) => {
+                return b.ranking - a.ranking;
+            }).map((player: any, i: number) => `${i + 1}. ${player.name} - ${player.ranking}`);
 
-        updateLeaderboard(allPlayers);
+            updateLeaderboard(allPlayers);
+        }catch(e){
+            console.error("refreshLeaderboard","caught error",e)
+        }
+        
     }
 
     // The "floor" object was originally named "entity" from the Decentraland Builder.
@@ -46,9 +51,9 @@ connect("my_room").then((room) => {
     utils.triggers.enableDebugDraw(true)
     
     addRepeatTrigger(
-        Vector3.create(16, 2, 16), Vector3.create(0, 3, 0),
-        () => {
-            log('player.enter.floorTriggerShape')
+        Vector3.create(16, 2, 16), Vector3.create(0, 0, 0),
+        (entity:Entity) => { 
+            log('player.enter.floorTriggerShape',entity)
             if (lastBlockTouched > 2 && lastBlockTouched < 20) {
                 room.send("fall", Transform.get(engine.PlayerEntity).position);
             }
@@ -64,14 +69,10 @@ connect("my_room").then((room) => {
     function spawnCube(x: number, y: number, z: number) {
         // create the entity
         const cube = engine.addEntity()
-      
-        Transform.create(cube, {
-          position: { x, y, z },
-        })
-      
+         
         MeshRenderer.setBox(cube)
         MeshCollider.setBox(cube)
-
+ 
         // add a transform to the entity
         Transform.create(cube,{ position: Vector3.create(x, y, z) })
         /*
@@ -84,16 +85,16 @@ connect("my_room").then((room) => {
         */
        
         addRepeatTrigger(
-            Vector3.create(0, 2, 0), // position,
-            Vector3.create(0.7, 1, 0.7), // size
-            () => {
-                log('player.enter.touch.cube')
+            Vector3.create(0.7, 1, 0.7),// position,
+             Vector3.create(0, 2, 0), // size
+            (entity:Entity) => {
+                log('player.enter.touch.cube',entity)
                 onTouchBlock(y);
             },
-            floor,
+            cube,
             false,
             () => {
-                log('player.exit.touch.cube')
+                //log('player.exit.touch.cube')
             }
         )
 
@@ -116,9 +117,10 @@ connect("my_room").then((room) => {
     // -- Colyseus / Schema callbacks -- 
     // https://docs.colyseus.io/state/schema/
     //
-    let allBoxes: Entity[] = [];
+    let allBoxes: Entity[] = []; 
     let lastBox: Entity;
     room.state.blocks.onAdd = (block: any, i: number) => {
+        log("room.state.blocks.onAdd","ENTRY")
         lastBox = spawnCube(block.x, block.y, block.z);
         allBoxes.push(lastBox);
     };
@@ -151,6 +153,7 @@ connect("my_room").then((room) => {
     })
 
     room.onMessage("start", () => {
+        log("room.onMessage.start","ENTRY")
         // remove all previous boxes
         allBoxes.forEach((box) => engine.removeEntity(box));
         allBoxes = [];
@@ -167,9 +170,15 @@ connect("my_room").then((room) => {
     })
 
     room.onMessage("finished", () => {
-        //ui.displayAnnouncement(`${highestPlayer.name} wins!`, 8, Color4.White(), 60);
-        log("finished",`${highestPlayer.name} wins!`)
-        playOnceRandom([finishSound1, finishSound2]);
+        try{
+            //ui.displayAnnouncement(`${highestPlayer.name} wins!`, 8, Color4.White(), 60);
+            log("finished",`${highestPlayer?.name} wins!`)
+            playOnceRandom([finishSound1, finishSound2]);
+        }catch(e){
+            console.log("room.onMessage.finished","caught error",e)
+            console.error(e)
+        }
+    
        // countdown.hide();
     });
 

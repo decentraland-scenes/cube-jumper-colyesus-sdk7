@@ -4,12 +4,13 @@
 //
 
 import { Color4 } from "@dcl/sdk/math";
-import { Client, Room } from "colyseus.js/decentraland";
+import { Client, Room } from "colyseus.js";
 import { log } from "./back-ports/backPorts";
 import { getUserData } from "~system/UserIdentity"
 import { getRealm } from "~system/Runtime"
 //import { isPreviewMode, getCurrentRealm } from '@decentraland/EnvironmentAPI'
 //import { getUserData } from "@decentraland/Identity";
+
 
 
 export async function connect(roomName: string, options: any = {}) {
