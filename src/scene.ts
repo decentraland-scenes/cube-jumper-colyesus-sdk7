@@ -1,5 +1,5 @@
 //import * as utils from '@dcl/ecs-scene-utils';
-import { GltfContainer, Transform, engine } from '@dcl/sdk/ecs';
+import { Entity, GltfContainer, Transform, engine } from '@dcl/sdk/ecs';
 import { Quaternion, Vector3 } from '@dcl/sdk/math';
 
 //
@@ -7,7 +7,9 @@ import { Quaternion, Vector3 } from '@dcl/sdk/math';
 // https://builder.decentraland.org/
 //
 
-export const _scene = engine.addEntity()//new Entity('_scene')
+export let floor:Entity
+export function initStatic(){
+const _scene = engine.addEntity()//new Entity('_scene')
 
 const viewSourceBlock = engine.addEntity()// new Entity('multicolorPattern')
 //engine.addEntity(viewSourceBlock)
@@ -50,7 +52,7 @@ Transform.create(largeRoundBrickGrassBed,{
 GltfContainer.create(largeRoundBrickGrassBed,{src:"models/GrassPatchLarge_01/GrassPatchLarge_01.glb"})
 
 
-export const floor = engine.addEntity()//new Entity('entity')
+floor = engine.addEntity()//new Entity('entity')
 
 GltfContainer.create(floor,{src:"models/FloorBaseGrass_02/FloorBaseGrass_02.glb"})
 
@@ -154,3 +156,4 @@ Transform.create(grassRow4,{
 })
 
 GltfContainer.create(grassRow4,{src:"models/BushPatch_01/BushPatch_01.glb"})
+}

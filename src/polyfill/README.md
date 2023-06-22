@@ -5,3 +5,4 @@ dcl runtime does not provide at runtime some functions or objects needed by 3rd 
 * clearTimeout
 * setTimeout
 * XMLHttpRequest
+* etc....

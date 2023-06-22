@@ -141,7 +141,7 @@ export class MyRoom extends Room<MyRoomState> {
     });
     this.state.players.set(client.sessionId, newPlayer);
 
-    console.log(newPlayer.name, "joined! => ", options.userData);
+    console.log(this.roomId,this.roomName,newPlayer.name, "joined! => ", options.userData);
   }
 
   onLeave (client: Client, consented: boolean) {
@@ -152,7 +152,7 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   onDispose() {
-    console.log("Disposing room...");
+    console.log(this.roomId,this.roomName,"Disposing room...");
   }
 
 }

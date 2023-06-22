@@ -9,11 +9,12 @@ import { AudioSource, Entity, MeshCollider, MeshRenderer, Transform, engine } fr
 import { Vector3 } from '@dcl/sdk/math';
 import { addRepeatTrigger } from './Utils';
 
-// play ambient music
-playLoop(ambienceSound, 0.4);
 
-updateLeaderboard(["- Nobody -"]);
+export function initGamePlay(){
+    // play ambient music
+    playLoop(ambienceSound, 0.4);
 
+    updateLeaderboard(["- Nobody -"]);
 
 //
 // Connect to Colyseus server! 
@@ -21,7 +22,7 @@ updateLeaderboard(["- Nobody -"]);
 //
 connect("my_room").then((room) => {
     log("Connected!");
-
+    
     // create UI countdown
     //const countdown = new ui.UICounter(0, -30, 30, Color4.White(), 50, false);
 
@@ -196,3 +197,4 @@ connect("my_room").then((room) => {
 
 });
 
+}
